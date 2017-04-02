@@ -1,0 +1,124 @@
+{% macro navDataWindPrev(dataWindPrev) %}
+
+<div class="row">
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-primary" onClick="editSite();">Editer</button>
+        <button type="button" class="btn btn-primary" onClick="test();">Tests de récupération des données</button>
+        <button type="button" class="btn btn-primary"  onClick="save('#resultAjax');">Get and save data</button>
+        <button type="button" class="btn btn-primary" onClick="deleteSite();">Effacer le site {{ dataWindPrev.website.nom }}</button>
+        <button type="button" class="btn btn-primary">Historique</button>
+    </div>
+<br />
+<br />
+<div id="subNavAjax" class="row hide">
+    <div class="col-sm-12">
+        <button type="button" class="btn btn-primary" onClick="step1();" >
+            {{ "admin.dataWindPrev.button.test.step1" | trans }}
+        </button>
+
+        <button type="button" class="btn btn-primary" onClick="step2();" >
+            {{ "admin.dataWindPrev.button.test.step2" | trans }}
+        </button>
+
+        <button type="button" class="btn btn-primary" onClick="step3();" >
+            {{ "admin.dataWindPrev.button.test.step3" | trans }}
+        </button>
+
+        <button type="button" class="btn btn-primary" onClick="save('#resultAjax');" >
+            {{ "admin.dataWindPrev.button.test.save" | trans }}
+        </button>
+    </div>
+</div>
+
+    <script>
+
+        function deleteSite() {
+            if (confirm("Voulez vous vraiment effacer le site {{ dataWindPrev.website.nom }} du spot ? ")) {
+                window.location.replace("{{ path('_bo_ajax_spot_webSite_delete', {'id':dataWindPrev.id})}}");
+            }
+        }
+
+        function editSite() {
+            $('#resultAjax').html('<img src="{{ asset('bundles/lapoizwind/images/loading.gif') }}" alt="Loading Ajax data" />');
+            var id = {{ dataWindPrev.id }};
+            $.ajax({
+                type: "POST",
+                url: "{{ path('_bo_ajax_spot_edit_site', {'id':dataWindPrev.id})}}",
+                id: id,
+                cache: false,
+                success: function(data){
+                    $('#resultAjax').html(data);
+                }
+            });
+            return false;
+        }
+
+        function test() {
+            $('#subNavAjax').removeClass('hide');
+        }
+
+        function step1(){
+            $('#resultAjax').html('<img src="{{ asset('bundles/lapoizwind/images/loading.gif') }}" alt="Loading Ajax data" />');
+            var id = {{ dataWindPrev.id }};
+            $.ajax({
+                type: "POST",
+                url: "{{ path('_bo_ajax_dataWindPrev_test_step1', {'id':dataWindPrev.id})}}",
+                id: id,
+                cache: false,
+                success: function(data){
+                    $('#resultAjax').html(data);
+                }
+            });
+            return false;
+        };
+
+        function step2(){
+            $('#resultAjax').html('<img src="{{ asset('bundles/lapoizwind/images/loading.gif') }}" alt="Loading Ajax data" />');
+            var id = {{ dataWindPrev.id }};
+            $.ajax({
+                type: "POST",
+                url: "{{ path('_bo_ajax_dataWindPrev_test_step2', {'id':dataWindPrev.id})}}",
+                id: id,
+                cache: false,
+                success: function(data){
+                    $('#resultAjax').html(data);
+                }
+            });
+            return false;
+        };
+
+        function step3(){
+            $('#resultAjax').html('<img src="{{ asset('bundles/lapoizwind/images/loading.gif') }}" alt="Loading Ajax data" />');
+            var id = {{ dataWindPrev.id }};
+            $.ajax({
+                type: "POST",
+                url: "{{ path('_bo_ajax_dataWindPrev_test_step3', {'id':dataWindPrev.id})}}",
+                id: id,
+                cache: false,
+                success: function(data){
+                    $('#resultAjax').html(data);
+                }
+            });
+            return false;
+        };
+
+
+        function save(target){
+            $('#resultAjax').html('<img src="{{ asset('bundles/lapoizwind/images/loading.gif') }}" alt="Loading Ajax data" />');
+            var id = {{ dataWindPrev.id }};
+            $.ajax({
+                type: "POST",
+                url: "{{ path('_bo_ajax_dataWindPrev_test_save', {'id':dataWindPrev.id})}}",
+                id: id,
+                cache: false,
+                success: function(data){
+                    $(target).html(data);
+                }
+            });
+            return false;
+        };
+    </script>
+
+
+
+{% endmacro %}

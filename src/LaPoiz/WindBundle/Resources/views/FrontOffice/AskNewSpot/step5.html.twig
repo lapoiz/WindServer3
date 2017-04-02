@@ -1,0 +1,61 @@
+<h2>Etape n°5: Résumé</h2>
+
+<h3>Vous</h3>
+    {{ contact.username }}<br />
+    {{ contact.mail }}
+
+<h3>Les sites de prevision météo</h3>
+    {% if spot.dataWindPrev is not null %}
+        <ul>
+        {% for dataWindPrevSpot in spot.dataWindPrev %}
+            <li>{{ dataWindPrevSpot.website.nom }}: <a href="{{ dataWindPrevSpot.url }}" target="_blank">{{ dataWindPrevSpot.url }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+<h3>Autre infos ?</h3>
+    {{ form_start(form, {
+        'style': 'horizontal',
+        'label_col': 2,
+        'widget_col': 8,
+        'methode' : 'POST',
+        'action' : path('_fo_ajax_spot_ask_create_send', {'id': spot.id, 'idContact': contact.id})
+    })}}
+
+            {{ form_errors(form, { 'global_errors': true }) }}
+
+            {{ form_end(form) }}
+
+
+<script>
+
+    $("#contact_form").on('submit', function(e){
+        e.preventDefault();
+        var $this = $(this);
+
+        var htmlBackup =  $('#contentAskNewSpot').html();
+        $('#contentAskNewSpot').html('<img src="{{ asset('bundles/lapoizwind/images/loading.gif') }}" alt="Loading Ajax data" />');
+
+        $.ajax({
+            url: $this.attr('action'),
+            type: $this.attr('method'),
+            data: $this.serialize(),
+            success : function(code_html, statut){
+                console.log("code_html: --->"+code_html+"<---");
+                if (code_html == 'ok') {
+                    // ok.html.twig
+                    window.location.href = "{{ path('_index') }}";
+                } else {
+                    $('#contentAskNewSpot').html(code_html);
+                }
+            },
+            error : function(resultat, statut, erreur){
+                alert("Problème de connexion ! - Erreur:"+erreur);
+                $('#contentAskNewSpot').html(htmlBackup);
+            }
+        });
+        return false;
+    });
+
+    displayStep(5);
+</script>

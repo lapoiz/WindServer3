@@ -1,0 +1,62 @@
+parameters:
+#    la_poiz_wind.example.class: LaPoiz\WindBundle\Example
+
+services:
+    la_poiz_wind.form.type.testGetMaree:
+        class: LaPoiz\WindBundle\Form\TestGetMareeType
+        tags:
+            - { name: form.type, alias: testGetMaree }
+
+    la_poiz_wind.form.type.spot:
+        class: LaPoiz\WindBundle\Form\SpotType
+        tags:
+            - { name: form.type, alias: spot }
+
+    la_poiz_wind.form.type.region:
+        class: LaPoiz\WindBundle\Form\RegionType
+        tags:
+            - { name: form.type, alias: region }
+
+    la_poiz_wind.form.type.infoSpot:
+        class: LaPoiz\WindBundle\Form\InfoSpotType
+        tags:
+            - { name: form.type, alias: infoSpotForm }
+
+    la_poiz_wind.form.type.dataWindPrev:
+        class: LaPoiz\WindBundle\Form\DataWindPrevType
+        tags:
+            - { name: form.type, alias: dataWindPrevForm }
+
+    la_poiz_wind.form.type.maree:
+        class: LaPoiz\WindBundle\Form\MareeType
+        tags:
+            - { name: form.type, alias: mareeForm }
+
+
+    la_poiz_wind.form.type.contact:
+        class: LaPoiz\WindBundle\Form\ContactType
+        tags:
+            - { name: form.type, alias: contactForm }
+
+
+    la_poiz_wind.form.type.comment:
+        class: LaPoiz\WindBundle\Form\CommentType
+        tags:
+            - { name: form.type, alias: commentForm }
+
+
+# ********** Extension Twig **************
+
+    la_poiz_wind.twig.extension:
+        class: LaPoiz\WindBundle\Twig\LaPoizExtension
+        tags:
+            - { name: twig.extension }
+
+#    twig.extension.intl:
+#        class: Twig\Extensions\Extension\Intl
+#        tags:
+#            - { name: twig.extension }
+
+#    la_poiz_wind.example:
+#        class: %la_poiz_wind.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]

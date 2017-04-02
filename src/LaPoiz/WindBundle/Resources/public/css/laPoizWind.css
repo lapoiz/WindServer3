@@ -1,0 +1,216 @@
+#spot_windOrientation {
+    display: none;
+}
+
+.titreSVG {
+    color:#333333;
+    font-size: 18px;
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial;
+    line-height: normal
+}
+.titleLineTableNote {
+    vertical-align: middle;
+}
+
+
+.table-note {
+    font-size: 10px;
+    padding: 1px;
+}
+/*
+.table-note > tbody > tr > td {
+    text-align: center;
+    line-height: 1;
+}
+.table-note > tbody > tr > td > div {
+    text-align: center;
+    line-height: 1;
+}
+.table-note > tbody > tr > td > div.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}*/
+
+.elemGreen {
+    color:green;
+}
+.elemOrange {
+    color:orange;
+}
+.elemRed {
+    color:red;
+}
+
+#meteoGraph {
+    height: 400px;
+}
+
+.tableWithoutBorder {
+    border: 0px;
+}
+
+/* ************* Nav Bar ******************************/
+
+.navbar-brand {
+    padding: 1px; /*adjust the top/bottom padding if your logo looks too small */
+    margin-top: 0px; /* you can adjust this if your logo needs to be moved up or down but simply adjusting the padding is easier */
+    height: 35px; /* this should be equal to computed height of .navbar-nav>li>a */
+}
+.logoHomePage > img {
+    display: block;
+    background-color: white;
+    border-radius: 50%;
+    height: 35px; /* resize UP to fit*/
+    width: 35px; /* resize based on height */
+    margin: 0 auto;
+
+    -o-object-fit: contain; /* Opera Support */
+    object-fit: contain; /* Resize down to fit container */
+}
+
+
+/* ************* Page Sites Map *********** */
+
+#sitesMap {
+    margin: 0;
+    padding: 0;
+    height: 600px;
+    width: 100%;
+}
+.mapIconLabel {
+    font-size: 10px;
+    color: black;
+    text-align: center;
+    line-height: 11px;
+
+    width: 20px;
+    white-space: nowrap;
+}
+
+.infoBullAide {
+    font-size: xx-small;
+    font-style: italic;
+}
+.textMapInfoBulle {
+    margin-bottom: 5px;
+    line-height: 1em;
+    padding-top: 0px;
+}
+
+/* ************* INDEX = HOME PAGE *********** */
+
+.barre_region {
+    cursor:  pointer;
+}
+
+.meteo-icon {
+    height: 15px;
+    width: 20px;
+}
+
+.meteo-display-icon {
+    font-size: 8px;
+    color: darkgrey;
+}
+
+.helpHP {
+    color: green;
+    text-align: right;
+    width: 100%;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.logoWebsite {
+    height: 20px;
+    width: 20px;
+    margin: 0px;
+}
+
+.nbHourNavCircle {
+    display: inline-block;
+    background: white;
+    border-radius: 50%;
+    border: 2px solid black;
+    height: 20px;
+    width: 20px;
+    margin: 0;
+    text-align: center;
+    line-height: 1.7;
+}
+
+.borderRed {
+    border-color: red;
+}
+.borderGreen {
+    border-color: green;
+}
+.borderOrange {
+    border-color: orange;
+}
+
+.noPadding {
+    padding-left: 1px;
+    padding-right: 1px;
+}
+
+
+
+.dropdown-submenu{
+    position:relative;
+}
+
+.dropdown-submenu > .dropdown-menu
+{
+    top:0;
+    left:100%;
+    margin-top:-6px;
+    margin-left:-1px;
+    -webkit-border-radius:0 6px 6px 6px;
+    -moz-border-radius:0 6px 6px 6px;
+    border-radius:0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover > .dropdown-menu{
+    display:block;
+}
+
+.dropdown-submenu > a:after{
+    display:block;
+    content:" ";
+    float:right;
+    width:0;
+    height:0;
+    border-color:transparent;
+    border-style:solid;
+    border-width:5px 0 5px 5px;
+    border-left-color:#cccccc;
+    margin-top:5px;
+    margin-right:-10px;
+}
+
+.dropdown-submenu:hover > a:after{
+    border-left-color:#ffffff;
+}
+
+.dropdown-submenu .pull-left{
+    float:none;
+}
+
+.dropdown-submenu.pull-left > .dropdown-menu{
+    left:-100%;
+    margin-left:10px;
+    -webkit-border-radius:6px 0 6px 6px;
+    -moz-border-radius:6px 0 6px 6px;
+    border-radius:6px 0 6px 6px;
+}
+
+div.inLine {
+    display: flex;
+
+}
+
+div.wind-elem-flag {
+    width: 53px;
+    padding:0px;
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{% block descriptionPage %}Site pour visualiser le vent sur les spots de kite en France.{% endblock %}">
+    <meta name="author" content="Damien Poizat">
+    <link rel="shortcut icon" href="{{ asset('bundles/lapoizwind/images/lapoizWindIcone.png') }}">
+
+    <title>{% block titlePage %}LaPoizWind{% endblock %}</title>
+    <!-- Bootstrap core CSS -->
+    <link href="{{ asset('bundles/lapoizwind/css/lapoizwind-bootstrap.css') }}" rel="stylesheet" media="screen">
+    <script src="{{ asset('bundles/lapoizwind/js/lapoizwind.js') }}"></script>
+
+    <!-- HTML5 Shim and Respond.js add IE8 support of HTML5 elements and media queries -->
+    {% include 'BraincraftedBootstrapBundle::ie8-support.html.twig' %}
+
+    <!-- Icons en plus -->
+    <link href="{{ asset('bundles/lapoizwind/font/css/fontello.css') }}" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="{{ asset('bundles/lapoizwind/css/laPoizWind.css') }}" rel="stylesheet">
+
+    <!--<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>-->
+    <script src="{{ asset('bundles/lapoizwind/js/jquery-1.10.2.min.js') }}"></script>
+    <script src="{{ asset('bundles/lapoizwind/js/bootstrap.min.js') }}"></script>
+
+    <script src="http://code.highcharts.com/highcharts.js"></script>
+
+    {% block javascriptsHeader %}   {% endblock %}
+    {% block scriptGraph %}    {% endblock %}
+    {% block stylesheets %}    {% endblock %}
+
+</head>
+
+    
+<body>
+
+    {% if listSpot is defined %}
+
+    {% from "LaPoizWindBundle:FrontOffice/PageComposant:nav.html.twig" import view %}
+    {{ view(listRegion, listSpotsWithoutRegion) }}
+
+    {% endif %}
+
+    {% from "LaPoizWindBundle:FrontOffice/PageComposant:connectModal.html.twig" import view %}
+    {{ view() }}
+
+
+    <div class="container">
+
+        {% block bodyPage %}
+            CORPS DE LA PAGE .................
+        {% endblock %}
+    </div><!-- /.container -->
+
+    {% block javascriptsFooter %}   {% endblock %}
+
+    <script>
+        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+                    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+        ga('create', 'UA-70684764-1', 'auto');
+        ga('send', 'pageview');
+
+    </script>
+
+</body>
+
+</html>

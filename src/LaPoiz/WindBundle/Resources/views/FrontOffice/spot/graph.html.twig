@@ -1,0 +1,28 @@
+{% macro graph(spot) %}
+
+<div id="meteoGraph"></div>
+<div id="Loading"></div>
+<div id="jsonData" style="visibility: hidden"></div>
+
+
+
+    {% from "LaPoizWindBundle:FrontOffice/spot:graphScript.html.twig" import script %}
+    {{ script(spot) }}
+
+
+    <script>
+        /** Load Json and create Meteogram */
+        var meteogram;
+        $(function () { // On DOM ready...
+            $.getJSON(
+                    '{{ path('_fo_json_spot_data',{'id':spot.id}) }}',
+                    function (jsonSpotData) {
+                        meteogram = new Meteogram(jsonSpotData, 'meteoGraph');
+                        {% if spot.mareeURL|default is not empty %}
+                            drawPlotBandMareeGraphSpot();
+                        {% endif %}
+                    });
+        });
+    </script>
+
+{% endmacro %}

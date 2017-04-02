@@ -1,0 +1,22 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/security.html
+security:
+
+    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        administrators:
+            entity: { class: LaPoizWindBundle:User, property: username }
+
+    firewalls:
+        secured_area:
+            pattern:    ^/
+            anonymous: ~
+            form_login:
+                check_path: /login_check
+                login_path: /login
+            logout:
+                path: /logout
+                target: /index
+
+    access_control:
+        - { path: ^/admin, roles: ROLE_ADMIN }
