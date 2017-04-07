@@ -194,7 +194,8 @@ class MeteoFranceGetData extends WebsiteGetData
 			//return $wind;
 			return WebsiteGetData::transformeKmhByNoeud($wind);
 		} else {
-			return "?";
+			// pas de vent
+			return 0;
 		}
 	}
 

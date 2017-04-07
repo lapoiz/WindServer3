@@ -79,7 +79,7 @@
             function deleteContact(contactId) {
                 $('#contactActionLogo').html('<img src="{{ asset('bundles/lapoizwind/images/loading.gif') }}" alt="Loading Ajax data" />');
 
-                var urlDeleteContact=Routing.generate('_bo_ajax_contact_delete', { id: contactId });;
+                var urlDeleteContact=Routing.generate('_bo_ajax_contact_delete', { id: contactId });
                 $.ajax({
 
                     url: urlDeleteContact,
@@ -108,7 +108,9 @@
                             var idSpot = $(this).attr("value");
 
                             if ($(this).attr("name")=="delete") {
-                                var urlDelete = Routing.generate('_bo_ajax_spot_delete', { id: idSpot });
+                                //var urlDelete = Routing.generate('_bo_ajax_spot_delete', { id: idSpot });
+                                var urlDelete = "{{ path('_bo_ajax_spot_delete', {'id': '__idSpot__'})|escape('js') }}";
+                                urlDelete=urlDelete.replace(/__idSpot__/i,idSpot);
 
                                 $.ajax({
                                     url: urlDelete,
@@ -137,9 +139,11 @@
                             var idSpot = $(this).attr("value");
 
                             if ($(this).attr("name")=="valid") {
-                                var urlValid = Routing.generate('_bo_ajax_spot_valid', { id: idSpot });
+                                //var urlValid = Routing.generate('_bo_ajax_spot_valid', { id: idSpot });
+                                var urlValid = "{{ path('_bo_ajax_spot_valid', {'id': '__idSpot__'})|escape('js') }}";
+                                urlValid=urlValid.replace(/__idSpot__/i,idSpot);
 
-                                $.ajax({
+                                        $.ajax({
                                     url: urlValid,
                                     type: "POST",
                                     success: function(html) {

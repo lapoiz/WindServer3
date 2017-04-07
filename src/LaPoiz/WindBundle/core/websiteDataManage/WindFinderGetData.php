@@ -101,6 +101,9 @@ class WindFinderGetData extends WebsiteGetData
     static private function getDateClean($htmlData) {
         //$this->get('logger')->err('htmlDate:'+$htmlData);
         $htmlData = trim($htmlData);
+        $htmlData=mb_ereg_replace("[[:blank:]]","",$htmlData);
+        $toto=preg_split('/\n/',$htmlData);
+        $htmlData=$toto[0];
         preg_match('#([0-9]{2})$#',$htmlData,$data);
 
         if ($data[1]>=date('d'))
