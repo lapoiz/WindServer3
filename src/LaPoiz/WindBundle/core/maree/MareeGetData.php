@@ -273,39 +273,4 @@ class MareeGetData {
         }
         return $prevMaree;
     }
-
-/* DELETE ? - 28/01/2015
-    static function getMareeInfoUrl($city) {
-
-        $urlResult='http://maree.info/';
-        switch ($city) {
-            case 'Wissant':
-                $urlResult=$urlResult.'6';
-                break;
-            case 'LeCrotoy':
-                $urlResult=$urlResult.'150';
-                break;
-            case 'Dieppe':
-                $urlResult=$urlResult.'14';
-                break;
-            case 'Fécamp':
-                $urlResult=$urlResult.'16';
-                break;
-            case 'Deauville':
-                $urlResult=$urlResult.'23';
-                break;
-            case 'Ouistreham':
-                $urlResult=$urlResult.'25';
-                break;
-            case 'Etretat':
-                $urlResult=$urlResult.'17';
-                break;
-            case 'Saint-Valery-en-Caux':
-                $urlResult=$urlResult.'15';
-                break;
-        }
-
-        return $urlResult;
-    }
-*/
 } 

@@ -31,13 +31,17 @@ class RosaceWindManage
      * Créer une image png de la rosace des vents, avec GD.
      * L'image sera stockée dans :  images/windRosaces/spotId.png
      */
-    static function createRosaceWind(Spot $spot, Controller $controller) {
+    static function createRosaceWind(Spot $spot, $urlImage) {
         try {
             $rosaceImg=RosaceWindManage::createImageRosaceWind($spot);
 
             $ds = DIRECTORY_SEPARATOR;
-            $urlImage=$controller->get("kernel")->getRootDir().$ds.'..'.$ds.'web'.$ds.
+
+            /*$urlImage=$controller->get("kernel")->getRootDir().$ds.'..'.$ds.'web'.$ds.
                 'images'.$ds.'windRosaces';
+
+            $urlImage=$controller->getParameter('svg_directory');
+            */
             RosaceWindManage::createRoute($urlImage);
 
             $urlImageMin=$urlImage.$ds.$spot->getId().".min.png";

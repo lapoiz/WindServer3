@@ -7,6 +7,7 @@ use LaPoiz\WindBundle\core\websiteDataManage\MeteoFranceGetData;
 
 abstract class WindData {
 	
+	// Todo: Delete
 	static function parseAndSaveDataWindPrev($dataWindPrev) {
 		switch ($dataWindPrev->getWebsite()->getNom()) {
 			case "MeteoFrance":

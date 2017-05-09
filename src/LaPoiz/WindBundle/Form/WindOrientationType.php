@@ -6,13 +6,13 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class OrientationWindType extends AbstractType
+class WindOrientationType extends AbstractType
 {
   public function getName()
   {
-	return 'orientationWind';
+	//return 'orientationWind';
+      return 'windOrientation';
   }
   
   public function buildForm(FormBuilderInterface $builder, array $options)

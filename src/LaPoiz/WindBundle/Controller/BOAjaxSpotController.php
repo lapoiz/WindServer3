@@ -1,30 +1,21 @@
 <?php
 namespace LaPoiz\WindBundle\Controller;
-
-use LaPoiz\WindBundle\Command\CreateNbHoureCommand;
 use LaPoiz\WindBundle\core\imagesManage\RosaceWindManage;
-use LaPoiz\WindBundle\core\maree\MareeTools;
-use LaPoiz\WindBundle\core\nbHoure\NbHoureMaree;
 use LaPoiz\WindBundle\core\nbHoure\NbHoureMeteo;
 use LaPoiz\WindBundle\core\nbHoure\NbHoureNav;
-use LaPoiz\WindBundle\core\nbHoure\NbHoureWind;
 use LaPoiz\WindBundle\core\note\ManageNote;
 use LaPoiz\WindBundle\core\infoSpot\ManageInfoSpot;
-use LaPoiz\WindBundle\Entity\DataWindPrev;
 use LaPoiz\WindBundle\Entity\InfoSpot;
 use LaPoiz\WindBundle\Entity\WebSite;
-use LaPoiz\WindBundle\Form\SpotType;
-use LaPoiz\WindBundle\Form\DataWindPrevType;
-use LaPoiz\WindBundle\core\maree\MareeGetData;
-use LaPoiz\WindBundle\Form\InfoSpotType;
 
+use LaPoiz\WindBundle\Form\SpotType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\Console\Output\NullOutput;
-use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
-use Symfony\Component\Validator\Constraints\Url;
 
 class BOAjaxSpotController extends Controller
 
@@ -48,14 +39,16 @@ class BOAjaxSpotController extends Controller
                     'LaPoizWindBundle:BackOffice:errorPage.html.twig',
                     array('errMessage' => "No spot find !"));
             }
-            $form = $this->createForm('spot',$spot)
-                ->add('save','submit')
-                ->add('effacer','button',array(
+            $form = $this->createForm(SpotType::class,$spot)
+            //$form =  $this->createFormBuilder($spot)
+                ->add('save',SubmitType::class)
+                ->add('effacer',ButtonType::class,array(
                         'attr' => array(
                             'onclick' => 'effacerSpot()',
                             'class' => 'btn btn-danger'
                         ),
-                    ));
+                    ));;
+                //->getForm();
 
             /*$form->add('actions', 'form_actions', [
                 'buttons' => [
@@ -67,13 +60,13 @@ class BOAjaxSpotController extends Controller
                 //$form->submit($request);
                 $form->handleRequest($request);
                 //$form->submit($request->request->get($form->getName()));
-
+                
                 if ($form->isValid()) {
                     // form submit
                     $spot = $form->getData();
                     $em->persist($spot);
                     $em->flush();
-                    RosaceWindManage::createRosaceWind($spot, $this);
+                    RosaceWindManage::createRosaceWind($spot, $this->getParameter('svg_directory'));
                 }
                 /*else {
                     return new Response($request);
@@ -82,7 +75,7 @@ class BOAjaxSpotController extends Controller
 
             return $this->render('LaPoizWindBundle:BackOffice/Spot/Ajax:spotEdit.html.twig', array(
                     'spot' => $spot,
-                    'form' => $form->createView()
+                    'form' => $form->createView(),
                 )
             );
         } else {

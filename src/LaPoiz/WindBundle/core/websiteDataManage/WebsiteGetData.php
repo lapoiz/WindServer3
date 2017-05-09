@@ -16,6 +16,7 @@ class WebsiteGetData
 	const meteoConsultName="MeteoConsult";
 	const alloSurfName="AlloSurf";
 	const allPrevName="AllPrev";
+	const merteoName="Merteo";
 	// Pour ajout nouveau site, ajouter également dans :
 	// 				LaPoiz\WindBundle\core\websiteDataManage/WebsiteManage.php line 42
 	//				LaPoiz\WindBundle\core\nbHoure\NbHoureWind.php line 43
@@ -32,6 +33,7 @@ class WebsiteGetData
 			WebsiteGetData::windFinderName,
 			WebsiteGetData::meteoConsultName,
 			WebsiteGetData::alloSurfName,
+			WebsiteGetData::merteoName,
 		);
 	}
 
@@ -58,6 +60,9 @@ class WebsiteGetData
 				break;
 			case WebsiteGetData::allPrevName:
 				return new AllPrevGetData();
+				break;
+			case WebsiteGetData::merteoName:
+				return new MerteoGetData();
 				break;
 		}
 		return $result;

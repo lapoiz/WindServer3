@@ -111,6 +111,10 @@
                         <li class="{% if app.request.attributes.get('_route') starts with '_bo_tools_create_allprevision_spot' %} active{% endif %}">
                             <a href="{{ path('_bo_tools_create_allprevision_spot',{'id':'1'}) }}">Create all prevision for a spot</a>
                         </li>
+
+                        <li class="{% if app.request.attributes.get('_route') starts with '_commande_import' %} active{% endif %}">
+                            <a href="{{ path('_commande_import') }}">Commande : Import</a>
+                        </li>
                     </ul>
                 </li>
 

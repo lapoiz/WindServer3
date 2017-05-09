@@ -46,8 +46,11 @@ class NbHoureWind {
                     case WebsiteGetData::alloSurfName :
                         NbHoureWind::calculNbHoureNavAlloSurf($previsionDate,$tabRosaceOrientation,$tabHoure);
                         break;
-
                     case WebsiteGetData::allPrevName :
+                        NbHoureWind::calculNbHoureNavAllPrev($previsionDate,$tabRosaceOrientation,$tabHoure);
+                        break;
+
+                    case WebsiteGetData::merteoName :
                         NbHoureWind::calculNbHoureNavAllPrev($previsionDate,$tabRosaceOrientation,$tabHoure);
                         break;
                 }

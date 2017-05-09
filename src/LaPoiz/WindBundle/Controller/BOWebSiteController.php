@@ -2,6 +2,7 @@
 
 namespace LaPoiz\WindBundle\Controller;
 
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
@@ -144,12 +145,12 @@ class BOWebSiteController extends Controller
      */
     private function createEditForm(WebSite $entity)
     {
-        $form = $this->createForm(new WebSiteType(), $entity, array(
+        $form = $this->createForm(WebSiteType::class, $entity, array(
             'action' => $this->generateUrl('_bo_website_edit', array('id' => $entity->getId())),
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', SubmitType::class, array('label' => 'Update'));
 
         return $form;
     }
@@ -161,12 +162,15 @@ class BOWebSiteController extends Controller
      */
     private function createCreateForm(WebSite $entity)
     {
-        $form = $this->createForm(new WebSiteType(), $entity, array(
+        //$form = $this->get('form.factory')->create(WebSiteType::class, $entity);
+        //$form = $this->createForm(WebSiteType::class, $entity);
+
+        $form = $this->createForm(WebSiteType::class, $entity, array(
             'action' => $this->generateUrl('_bo_website_create'),
             'method' => 'POST',
-        ));
+            ));
 
-        $form->add('submit', 'submit', array('label' => 'Create'));
+        $form->add('submit', SubmitType::class, array('label' => 'Create'));
 
         return $form;
     }

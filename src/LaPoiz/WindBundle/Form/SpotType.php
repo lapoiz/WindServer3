@@ -2,9 +2,12 @@
 
 namespace LaPoiz\WindBundle\Form;
 
+use Genemu\Bundle\FormBundle\Form\Core\Type\TinymceType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class SpotType extends AbstractType
 {
@@ -17,21 +20,22 @@ class SpotType extends AbstractType
   {
     $builder->add('nom');
 
-    $builder->add('description','genemu_tinymce');
+    $builder->add('description',TinymceType::class);
 
-    $builder->add('localisationDescription','genemu_tinymce');
+    $builder->add('localisationDescription',TinymceType::class);
 
-    $builder->add('gpsLong','number',array('label'=>'GPS long'));
-    $builder->add('gpsLat','number',array('label'=>'GPS lat'));
+    $builder->add('gpsLong',NumberType::class,array('label'=>'GPS long'));
+    $builder->add('gpsLat',NumberType::class,array('label'=>'GPS lat'));
 
-    $builder->add('infoOrientation','genemu_tinymce');
-    $builder->add('infoMaree','genemu_tinymce');
+    $builder->add('infoOrientation',TinymceType::class);
+    $builder->add('infoMaree',TinymceType::class);
 
-    $builder->add('windOrientation', 'collection', array('type' => new OrientationWindType(), 'label'=>' '));
+//    $builder->add('windOrientation', CollectionType::class, array('entry_type' => WindOrientationType::class, 'label'=>' '));
+    //$builder->add('windOrientation', 'collection', array('type' => new OrientationWindType(), 'label'=>' '));
 
   }
 
-  public function setDefaultOptions(OptionsResolverInterface $resolver)
+  public function setDefaultOptions(OptionsResolver $resolver)
   {
   	$resolver->setDefaults(array(
   			'data_class'      => 'LaPoiz\WindBundle\Entity\Spot',

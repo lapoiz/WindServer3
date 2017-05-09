@@ -11,6 +11,7 @@ use LaPoiz\WindBundle\core\note\NoteMaree;
 use LaPoiz\WindBundle\core\note\ManageNote;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Console\Output\NullOutput;
@@ -132,8 +133,8 @@ class BOAjaxMareeController extends Controller
                     array('errMessage' => "No spot find !"));
             }
 
-            $form = $this->createForm(new MareeType(), $spot)
-                ->add('Save','submit');
+            $form = $this->createForm(MareeType::class, $spot)
+                ->add('Save',SubmitType::class);
 
             if ($request->isMethod('POST')) {
                 // envoie du formulaire pour modification des données marées

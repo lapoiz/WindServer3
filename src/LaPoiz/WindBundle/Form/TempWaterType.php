@@ -3,8 +3,9 @@
 namespace LaPoiz\WindBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class TempWaterType extends AbstractType
 {
@@ -15,10 +16,10 @@ class TempWaterType extends AbstractType
   
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
-      $builder->add('tempWaterURL', 'text', array('label' => 'ULR pour la T°C de l\'eau (http://www.meteocity.com/plage/)'));
+      $builder->add('tempWaterURL', TextType::class, array('label' => 'ULR pour la T°C de l\'eau (http://www.meteocity.com/plage/)'));
   }
 
-  public function setDefaultOptions(OptionsResolverInterface $resolver)
+  public function setDefaultOptions(OptionsResolver $resolver)
   {
   	$resolver->setDefaults(array(
   			'data_class'      => 'LaPoiz\WindBundle\Entity\Spot',

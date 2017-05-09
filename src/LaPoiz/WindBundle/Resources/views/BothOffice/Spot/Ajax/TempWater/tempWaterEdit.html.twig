@@ -2,7 +2,7 @@
 
 <div class="row">
     <div class="col-sm-6">
-        <form action="{{ path('_bo_ajax_spot_tempWater_edit', {'id':spot.id}) }}" method="POST" {{ form_enctype(form) }}
+        <form action="{{ path('_bo_ajax_spot_tempWater_edit', {'id':spot.id}) }}" method="POST"
               id="tempWater_form">
 
             {{ form_row(form.tempWaterURL) }}

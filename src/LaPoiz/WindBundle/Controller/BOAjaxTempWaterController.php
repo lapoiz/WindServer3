@@ -5,6 +5,7 @@ use LaPoiz\WindBundle\Form\TempWaterType;
 use LaPoiz\WindBundle\core\tempWater\TempWaterGetData;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Console\Output\NullOutput;
@@ -79,8 +80,8 @@ class BOAjaxTempWaterController extends Controller
                     array('errMessage' => "No spot find !"));
             }
 
-            $form = $this->createForm(new TempWaterType(), $spot)
-                ->add('Save','submit');
+            $form = $this->createForm(TempWaterType::class, $spot)
+                ->add('Save',SubmitType::class, array('label' => 'Save'));
 
             if ($request->isMethod('POST')) {
                 // envoie du formulaire pour modification des données de T°C

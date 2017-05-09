@@ -216,6 +216,9 @@ _bo_tools_create_allprevision_spot:
   path: /admin/BO/tools/creat/allprevision/spots/{id}
 
 
+_commande_import:
+  defaults: { _controller: LaPoizWindBundle:Commande:import }
+  path: /admin/commande/import
 
 
 

@@ -64,7 +64,7 @@ class BOToolsController extends Controller
     $listWebsites = $em->getRepository('LaPoizWindBundle:WebSite')->findAll();
 
     $spot=$em->getRepository('LaPoizWindBundle:Spot')->findFirst();
-    RosaceWindManage::createRosaceWind($spot, $this);
+    RosaceWindManage::createRosaceWind($spot, $this->getParameter('svg_directory'));
 
     return $this->container->get('templating')->renderResponse('LaPoizWindBundle:BackOffice/Tools:rosaceConvertPNG.html.twig',
         array(
@@ -92,10 +92,10 @@ class BOToolsController extends Controller
     $listWebsites = $em->getRepository('LaPoizWindBundle:WebSite')->findAll();
 
     foreach ($listSpot as $spot) {
-      RosaceWindManage::createRosaceWind($spot, $this);
+      RosaceWindManage::createRosaceWind($spot, $this->getParameter('svg_directory'));
     }
     foreach ($listSpotNotValid as $spot) {
-      RosaceWindManage::createRosaceWind($spot, $this);
+      RosaceWindManage::createRosaceWind($spot, $this->getParameter('svg_directory'));
     }
 
     return $this->container->get('templating')->renderResponse('LaPoizWindBundle:BackOffice/Tools:rosaceConvertPNGAllSpots.html.twig',

@@ -10,7 +10,9 @@ use LaPoiz\WindBundle\core\note\NoteWind;
 use LaPoiz\WindBundle\core\note\NoteMeteo;
 use LaPoiz\WindBundle\core\note\NoteTemp;
 
+use LaPoiz\WindBundle\Form\DataWindPrevType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\Security\Core\SecurityContext;
 use Symfony\Component\Console\Output\NullOutput;
@@ -45,8 +47,9 @@ class BOAjaxSiteController extends Controller
             }
             $dataWindPrev = new DataWindPrev();
             $dataWindPrev->setSpot($spot);
-            $form = $this->createForm('dataWindPrevForm',$dataWindPrev)
-            ->add('add to spot','submit');
+            $form = $this->createForm(DataWindPrevType::class,$dataWindPrev);
+            $form->add('submit', SubmitType::class, array('label' => 'add to spot'));
+            //->add('add to spot','submit');
 
             if ('POST' == $request->getMethod()) {
                 //$form->submit($request);

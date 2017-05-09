@@ -41,6 +41,9 @@ abstract class WebsiteManage {
                         case 'allosurf':
                             $nameWebSite = WebsiteGetData::alloSurfName;
                             break;
+                        case 'merteo':
+                            $nameWebSite = WebsiteGetData::merteoName;
+                            break;
                     }
                     if ($nameWebSite != null) {
                         return $em->getRepository('LaPoizWindBundle:WebSite')->findWithName($nameWebSite);

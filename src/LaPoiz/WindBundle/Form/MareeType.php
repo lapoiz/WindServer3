@@ -3,8 +3,11 @@
 namespace LaPoiz\WindBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\OptionsResolver\OptionsResolverInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MareeType extends AbstractType
 {
@@ -15,17 +18,17 @@ class MareeType extends AbstractType
   
   public function buildForm(FormBuilderInterface $builder, array $options)
   {
-      $builder->add('mareeURL', 'text', array('label' => 'ULR pour la marée (http://maree.info/)'));
-      $builder->add('hauteurMBGrandeMaree','hidden');
-      $builder->add('hauteurMHGrandeMaree','hidden');
-      $builder->add('hauteurMBMoyenneMaree','hidden');
-      $builder->add('hauteurMHMoyenneMaree','hidden');
-      $builder->add('hauteurMBPetiteMaree','hidden');
-      $builder->add('hauteurMHPetiteMaree','hidden');
+      $builder->add('mareeURL', TextType::class, array('label' => 'ULR pour la marée (http://maree.info/)'));
+      $builder->add('hauteurMBGrandeMaree',HiddenType::class);
+      $builder->add('hauteurMHGrandeMaree',HiddenType::class);
+      $builder->add('hauteurMBMoyenneMaree',HiddenType::class);
+      $builder->add('hauteurMHMoyenneMaree',HiddenType::class);
+      $builder->add('hauteurMBPetiteMaree',HiddenType::class);
+      $builder->add('hauteurMHPetiteMaree',HiddenType::class);
 
 
-    $builder->add('mareeRestriction', 'collection', array(
-            'type' => new MareeRestrictionType(),
+    $builder->add('mareeRestriction', CollectionType::class, array(
+            'entry_type' => MareeRestrictionType::class,
             'label' => 'Restriction',
             'allow_add' => true,
             'allow_delete' => true
@@ -35,7 +38,7 @@ class MareeType extends AbstractType
 
   }
 
-  public function setDefaultOptions(OptionsResolverInterface $resolver)
+  public function setDefaultOptions(OptionsResolver $resolver)
   {
   	$resolver->setDefaults(array(
   			'data_class'      => 'LaPoiz\WindBundle\Entity\Spot',
