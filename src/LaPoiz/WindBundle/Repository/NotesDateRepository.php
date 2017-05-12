@@ -54,7 +54,7 @@ class NotesDateRepository extends EntityRepository
         }
     }
 
-    // NEVER USED
+    // USED WebsiteGetData
     public function getNotesDateForDatePrev($spot, $datePrev) {
         $queryBuilder = $this->createQueryBuilder('notesDate');
         $queryBuilder

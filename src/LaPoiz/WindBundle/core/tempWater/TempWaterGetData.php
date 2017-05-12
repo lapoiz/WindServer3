@@ -20,6 +20,7 @@ class TempWaterGetData {
 
     /**
      * Récupere les prévision de T°C de l'eau depuis www.meteocity.com sur les 7 prochains joursS
+     * Utiliser: http://marine.meteoconsult.fr/meteo-marine/meteo-spots-de-glisse/manche/previsions-meteo-bleriot-plage-390-3.php
      */
     static function getTempWater($tempWaterInfoURL, $output) {
         // $tempWaterInfoURL: http://www.meteocity.com/france/plage/dieppe_p76217/

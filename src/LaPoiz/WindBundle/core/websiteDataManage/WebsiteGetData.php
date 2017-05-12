@@ -1,9 +1,13 @@
 <?php
 namespace LaPoiz\WindBundle\core\websiteDataManage;
 
+use Doctrine\ORM\EntityManager;
 use Goutte\Client;
+use LaPoiz\WindBundle\Entity\DataWindPrev;
+use LaPoiz\WindBundle\Entity\NotesDate;
 use LaPoiz\WindBundle\Entity\PrevisionDate;
 use LaPoiz\WindBundle\Entity\Prevision;
+use LaPoiz\WindBundle\Entity\Spot;
 use Symfony\Component\DomCrawler\Crawler;
 
 
@@ -171,7 +175,7 @@ class WebsiteGetData
 		return array($result,$chrono);
 	}
 	
-	function saveData($tableauData,$dataWindPrev,$entityManager){
+	function saveData($tableauData,DataWindPrev $dataWindPrev, EntityManager $entityManager){
 		// $tableauData
 		// 2011-12-05 -> 13=>[wind=>17.5|orientation=>NNO...] | 19=>[wind=>12|orientation=>NO...] | 22=>...
 		$now=new \DateTime("now");
@@ -208,6 +212,10 @@ class WebsiteGetData
 							$prev->setTemp($dataPrev["temp"]);
 						}
 
+						if (isset($dataPrev["tempWater"])) {
+							WebsiteGetData::putTempWater($entityManager, $dataWindPrev->getSpot(),$prevDate->getDatePrev(), $dataPrev["tempWater"]);
+						}
+						
 						WindFinderGetData::calculateWind($windCalculate, $prev);
 
 						$prev->setPrevisionDate($prevDate);
@@ -248,6 +256,23 @@ class WebsiteGetData
 
 		return $result;
 	}
+
+	static function putTempWater(EntityManager $entityManager,Spot $spot, \DateTime $date, $prevTempWater) {
+		$previsionNotesDate=$entityManager->getRepository('LaPoizWindBundle:NotesDate')->getNotesDateForDatePrev($spot,$date);
+		if ($previsionNotesDate != null) {
+			$previsionNotesDate->setTempWater($prevTempWater);
+			$entityManager->persist($previsionNotesDate);
+		} else {
+			$previsionNotesDate = new NotesDate();
+			$previsionNotesDate->setTempWater($prevTempWater);
+			$previsionNotesDate->setDatePrev(clone $date);
+			$previsionNotesDate->setSpot($spot);
+			$spot->addNotesDate($previsionNotesDate);
+			$entityManager->persist($previsionNotesDate);
+			$entityManager->persist($spot);
+		}
+	}
+
 
 	/**
 	 * @param $windKmh : vent en Km/h

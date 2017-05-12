@@ -128,48 +128,59 @@ class ImportCommand extends ContainerAwareCommand  {
 
             $region = $tabRegions[$row['Region']];
 
-            $dataWindPrevWG = new DataWindPrev();
-            $dataWindPrevWG->setUrl($row['Windguru']);
-            $dataWindPrevWG->setWebsite($webSiteWG);
-            $dataWindPrevWG->setCreated(new \DateTime("now"));
-
-            $dataWindPrevWF = new DataWindPrev();
-            $dataWindPrevWF->setUrl($row['Windfinder']);
-            $dataWindPrevWF->setWebsite($webSiteWF);
-            $dataWindPrevWF->setCreated(new \DateTime("now"));
-
-            $dataWindPrevMF = new DataWindPrev();
-            $dataWindPrevMF->setUrl($row['Meteo France']);
-            $dataWindPrevMF->setWebsite($webSiteMF);
-            $dataWindPrevMF->setCreated(new \DateTime("now"));
-
-            $dataWindPrevMC = new DataWindPrev();
-            $dataWindPrevMC->setUrl($row['MeteoConsult']);
-            $dataWindPrevMC->setWebsite($webSiteMC);
-            $dataWindPrevMC->setCreated(new \DateTime("now"));
-
-            $dataWindPrevAS = new DataWindPrev();
-            $dataWindPrevAS->setUrl($row['AlloSurf']);
-            $dataWindPrevAS->setWebsite($webSiteAS);
-            $dataWindPrevAS->setCreated(new \DateTime("now"));
-
-            $dataWindPrevMer = new DataWindPrev();
-            $dataWindPrevMer->setUrl($row['Merteo']);
-            $dataWindPrevMer->setWebsite($webSiteMer);
-            $dataWindPrevMer->setCreated(new \DateTime("now"));
-
-            $dataWindPrevWG->setSpot($spot);
-            $dataWindPrevWF->setSpot($spot);
-            $dataWindPrevMF->setSpot($spot);
-            $dataWindPrevMC->setSpot($spot);
-            $dataWindPrevAS->setSpot($spot);
-            $dataWindPrevMer->setSpot($spot);
-            $spot->addDataWindPrev($dataWindPrevMF);
-            $spot->addDataWindPrev($dataWindPrevWG);
-            $spot->addDataWindPrev($dataWindPrevWF);
-            $spot->addDataWindPrev($dataWindPrevMC);
-            $spot->addDataWindPrev($dataWindPrevAS);
-            $spot->addDataWindPrev($dataWindPrevMer);
+            if (!empty($row['Windguru']) and trim($row['Windguru']) != '') {
+                $dataWindPrevWG = new DataWindPrev();
+                $dataWindPrevWG->setUrl($row['Windguru']);
+                $dataWindPrevWG->setWebsite($webSiteWG);
+                $dataWindPrevWG->setCreated(new \DateTime("now"));
+                $dataWindPrevWG->setSpot($spot);
+                $spot->addDataWindPrev($dataWindPrevWG);
+                $manager->persist($dataWindPrevWG);
+            }
+            if (!empty($row['Windfinder']) and trim($row['Windfinder']) != '') {
+                $dataWindPrevWF = new DataWindPrev();
+                $dataWindPrevWF->setUrl($row['Windfinder']);
+                $dataWindPrevWF->setWebsite($webSiteWF);
+                $dataWindPrevWF->setCreated(new \DateTime("now"));
+                $dataWindPrevWF->setSpot($spot);
+                $spot->addDataWindPrev($dataWindPrevWF);
+                $manager->persist($dataWindPrevWF);
+            }
+            if (!empty($row['Meteo France']) and trim($row['Meteo France']) != '') {
+                $dataWindPrevMF = new DataWindPrev();
+                $dataWindPrevMF->setUrl($row['Meteo France']);
+                $dataWindPrevMF->setWebsite($webSiteMF);
+                $dataWindPrevMF->setCreated(new \DateTime("now"));
+                $dataWindPrevMF->setSpot($spot);
+                $spot->addDataWindPrev($dataWindPrevMF);
+            }
+            if (!empty($row['MeteoConsult']) and trim($row['MeteoConsult']) != '') {
+                $dataWindPrevMC = new DataWindPrev();
+                $dataWindPrevMC->setUrl($row['MeteoConsult']);
+                $dataWindPrevMC->setWebsite($webSiteMC);
+                $dataWindPrevMC->setCreated(new \DateTime("now"));
+                $dataWindPrevMC->setSpot($spot);
+                $spot->addDataWindPrev($dataWindPrevMC);
+                $manager->persist($dataWindPrevMC);
+            }
+            if (!empty($row['AlloSurf']) and trim($row['AlloSurf']) != '') {
+                $dataWindPrevAS = new DataWindPrev();
+                $dataWindPrevAS->setUrl($row['AlloSurf']);
+                $dataWindPrevAS->setWebsite($webSiteAS);
+                $dataWindPrevAS->setCreated(new \DateTime("now"));
+                $dataWindPrevAS->setSpot($spot);
+                $spot->addDataWindPrev($dataWindPrevAS);
+                $manager->persist($dataWindPrevAS);
+            }
+            if (!empty($row['Merteo']) and trim($row['Merteo']) != '') {
+                $dataWindPrevMer = new DataWindPrev();
+                $dataWindPrevMer->setUrl($row['Merteo']);
+                $dataWindPrevMer->setWebsite($webSiteMer);
+                $dataWindPrevMer->setCreated(new \DateTime("now"));
+                $dataWindPrevMer->setSpot($spot);
+                $spot->addDataWindPrev($dataWindPrevMer);
+                $manager->persist($dataWindPrevMer);
+            }
 
             $region->addSpot($spot);
             $spot->setRegion($region);
@@ -184,21 +195,21 @@ class ImportCommand extends ContainerAwareCommand  {
                 // Put marrée restriction
                 ImportCommand::getMareeRestriction($spot, $row, $manager);
             }
-            $spot->setTempWaterURL($row['Temp eau']);
+
+            // Problème avec www.meteocity.com => TempWater : N/C durant l'hivert
+            //$spot->setTempWaterURL($row['Temp eau']);
 
             // Put info sur le site
             ImportCommand::getInfoURL($spot, $row, $manager);
 
 
-            $manager->persist($dataWindPrevWG);
-            $manager->persist($dataWindPrevWF);
-            $manager->persist($dataWindPrevMF);
-            $manager->persist($dataWindPrevMC);
-            $manager->persist($dataWindPrevAS);
-            $manager->persist($dataWindPrevMer);
             $manager->persist($spot);
             $manager->persist($region);
         }
+    }
+
+    static function isEmptyString($s){
+        return (!preg_match("[S]",$s));
     }
 
     static function getTabRegions(OutputInterface $output, EntityManager $em) {

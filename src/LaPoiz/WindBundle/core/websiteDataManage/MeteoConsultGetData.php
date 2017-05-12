@@ -18,6 +18,7 @@ class MeteoConsultGetData extends WebsiteGetData
 	const idClassOrientation='.Direction';
 	const attrOrientation='unitrose8';
 	const idClassTemp='.dataTempe';
+	const idClassTempWater='.dataMer';
 
 	const updateDateSelector= '#conteneur_principal > div > div > div > div > div > div > span';
 
@@ -68,6 +69,10 @@ class MeteoConsultGetData extends WebsiteGetData
 		//$toto1=$dataCrawler->eq(1)->html(); // Sea
 		//$toto2=$dataCrawler->eq(2)->html(); // Meteo
 
+		$sectionSea=$dataCrawler->eq(1);
+		$divSea=$sectionSea->filter(MeteoConsultGetData::idClassRowDataTab);
+		$tempWater=$divSea->filter(MeteoConsultGetData::idClassTempWater)->html();
+
 		$sectionMeteo=$dataCrawler->eq(2);
 		$divMeteoHoure=$sectionMeteo->filter(MeteoConsultGetData::idClassRowDataTab);
 
@@ -85,6 +90,7 @@ class MeteoConsultGetData extends WebsiteGetData
 				$tabDataDay[$numHoure]["wind"]=$divAllWinds->filter(MeteoConsultGetData::idClassWind)->html();
 				$tabDataDay[$numHoure]["orientation"]=$divAllWinds->filter(MeteoConsultGetData::idClassOrientation)->attr(MeteoConsultGetData::attrOrientation);
 				$tabDataDay[$numHoure]["temp"] = $divAllMeteo->filter(MeteoConsultGetData::idClassTemp)->html();
+				$tabDataDay[$numHoure]["tempWater"]=$tempWater;
 				$numHoure++;
 			}
 		}
@@ -110,6 +116,7 @@ class MeteoConsultGetData extends WebsiteGetData
 						$cleanElemHoure['date'] = $datePrev;
 						$cleanElemHoure['wind'] = $lineHoure['wind'];
 						$cleanElemHoure['temp'] = $lineHoure['temp'];
+						$cleanElemHoure['tempWater'] = $lineHoure['tempWater'];
 						$cleanElemHoure['orientation'] = MeteoConsultGetData::getOrientationClean($lineHoure['orientation']);
 						$cleanElemDay[] = $cleanElemHoure;
 

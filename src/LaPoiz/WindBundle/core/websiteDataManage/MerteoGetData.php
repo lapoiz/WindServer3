@@ -42,6 +42,8 @@ class MerteoGetData extends WebsiteGetData
                 $beginDay=false;
                 $date=null;
                 $previsionDateTab=null;
+                $shiftWithMarree=0; // spot avec marrée => shift=0 , Spot sans marrée => shift=1 (une colonne de plus)
+
                 foreach ($tr_elements as $tr) {
                     if ($beginDay) {
                         if ($tr->getAttribute('class')==MerteoGetData::interligneClass) {
@@ -56,7 +58,7 @@ class MerteoGetData extends WebsiteGetData
                             $previsionHoureTab['houre'] = $td_elements->item(0)->nodeValue;
 
                             // Dans un des TD du type: <td class="datacentre" [...] </td> récupérer la force du vent: <span class="vitesse nds">4nds</span>
-                            $previsionHoureTab['wind'] = $td_elements->item(7)->nodeValue;
+                            $previsionHoureTab['wind'] = $td_elements->item(7+$shiftWithMarree)->nodeValue;
 
                             // TD suivant récupérer le titre de l'image: <div class="vent459"><img src="lib/site/img/trans.gif" title="W (279°)" width="15" height="14"></div>
                             $previsionHoureTab['orientation'] = "?";
@@ -74,6 +76,7 @@ class MerteoGetData extends WebsiteGetData
                         // On récupére le jour : <td class="datadatejour" colspan="20"><span class="jourinfodate">Dimanche 9</span> [...]</td>
                         //$day=$tr->filter(MerteoGetData::dateClass)->getNode(0)->nodeValue;
                         $date=$tr->childNodes->item(0)->nodeValue;
+                        $shiftWithMarree=$tr->childNodes->item(0)->getAttribute('colspan')=='20'?0:1;
                     }
                 }
                 $previsionTab[$date] = $previsionDateTab;
