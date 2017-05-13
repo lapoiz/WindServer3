@@ -220,6 +220,9 @@ _commande_import:
   defaults: { _controller: LaPoizWindBundle:Commande:import }
   path: /admin/commande/import
 
+_commande_calcul_nb_houre_nav:
+  defaults: { _controller: LaPoizWindBundle:Commande:calculNbHoure }
+  path: /admin/commande/calculNbHoure
 
 
 

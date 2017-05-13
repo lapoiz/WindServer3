@@ -49,9 +49,8 @@ class NbHoureWind {
                     case WebsiteGetData::allPrevName :
                         NbHoureWind::calculNbHoureNavAllPrev($previsionDate,$tabRosaceOrientation,$tabHoure);
                         break;
-
                     case WebsiteGetData::merteoName :
-                        NbHoureWind::calculNbHoureNavAllPrev($previsionDate,$tabRosaceOrientation,$tabHoure);
+                        NbHoureWind::calculNbHoureNavMerteo($previsionDate,$tabRosaceOrientation,$tabHoure);
                         break;
                 }
             }
@@ -118,10 +117,14 @@ class NbHoureWind {
         NbHoureWind::calculNbHoureNavWebSite($previsionDate,$tabRosaceOrientation,$tabHoure);
     }
 
+    // Calcul le nb Heure de nav pour ce previsionDate de Merteo
+    static private function calculNbHoureNavMerteo($previsionDate,$tabRosaceOrientation,&$tabHoure) {
+        NbHoureWind::calculNbHoureNavWebSite($previsionDate,$tabRosaceOrientation,$tabHoure);
+    }
+
     // Calcul le nb Heure de nav pour ce previsionDate de toutes les prevision du spot
     static private function calculNbHoureNavAllPrev($previsionDate,$tabRosaceOrientation,&$tabHoure) {
-
-        // Todo: calcul les prev depuis tous les autres prev
+        NbHoureWind::calculNbHoureNavWebSite($previsionDate,$tabRosaceOrientation,$tabHoure);
     }
 
     /**
@@ -144,7 +147,9 @@ class NbHoureWind {
         $windTab=array();
         $windTab['orientation']=$tabRosaceOrientation[$orientation];
         $windTab['wind']=$prevision->getWind();
-        $windTab['timeNav']=NbHoureWind::calculNbHoureNavigation($tabRosaceOrientation[$orientation],$prevision->getWind());
+        // Innutile car on le calcul lorsqu'on rebalaye l'ensemble des prévisions en regardant la prevision précédente pour faire une moyenne durant l'heure
+        //$windTab['timeNav']=NbHoureWind::calculNbHoureNavigation($tabRosaceOrientation[$orientation],$prevision->getWind());
+
         return $windTab;
     }
 

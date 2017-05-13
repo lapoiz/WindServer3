@@ -2,6 +2,7 @@
 
 namespace LaPoiz\WindBundle\Command;
 
+use Doctrine\ORM\EntityManager;
 use LaPoiz\WindBundle\core\nbHoure\NbHoureMeteo;
 use LaPoiz\WindBundle\core\nbHoure\NbHoureNav;
 use LaPoiz\WindBundle\core\note\NbHoureWind;
@@ -31,7 +32,12 @@ class CreateNbHoureCommand extends ContainerAwareCommand  {
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->getContainer()->get('doctrine.orm.entity_manager');
+        $this->calcul($input, $output, $this->getContainer()->get('doctrine.orm.entity_manager'));
+    }
+
+
+    static function calcul(InputInterface $input, OutputInterface $output,EntityManager $em)
+    {
         // récupere tous les spots
         $listSpot = $em->getRepository('LaPoizWindBundle:Spot')->findAll();
 
@@ -58,8 +64,8 @@ class CreateNbHoureCommand extends ContainerAwareCommand  {
                     $nbHoureNavObj->setNbHoure($nbHoureNav);
                     $em->persist($nbHoureNavObj);
                     $em->persist($noteDates);
+                    $nbSiteCalc++;
                     if ($nbHoureNav>0) {
-                        $nbSiteCalc++;
                         $nbHoureNavCalc += $nbHoureNav;
                     }
                 }
@@ -99,6 +105,7 @@ class CreateNbHoureCommand extends ContainerAwareCommand  {
                 foreach ($tabTempWater as $numJourFromToday => $tempWater) {
                     $noteDates = ManageNote::getNotesDate($spot, clone $currentDay, $em);
                     $noteDates->setTempWater($tempWater);
+                    $output->writeln('<info>* '.$currentDay->format('d-m-Y').':'.$tempWater.'</info>');
                     $em->persist($noteDates);
                     $currentDay = date_add($currentDay, new \DateInterval('P1D')); // Jour suivant
                 }

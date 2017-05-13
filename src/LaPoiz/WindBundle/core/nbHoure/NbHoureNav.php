@@ -87,6 +87,19 @@ class NbHoureNav {
 
     /**
      * @param $tabNbHoureNavData: tableau provenant de createTabNbHoureNav
+     *          [aaaa-mm-dd]
+     *              [8] 
+     *                  [maree] = 1 ou 0
+     *                  [WindFinder]
+     *                      orientation = "OK" ou "KO" ou "warn"
+     *                      wind = 13
+     *                      timeNav = 0.5
+     *                  [MeteoConsult]
+     *                  [AlloSurf]
+     *                  ...
+     *              [9] = array
+     *              ...
+     *              [19] = array
      * @return tableau du nombre de nav en fonction des sites de prévision
      */
     static function calculateNbHourNav($tabNbHoureNavData) {
@@ -94,7 +107,7 @@ class NbHoureNav {
         $tabNbHoureNav=array();
 
         foreach ($tabNbHoureNavData as $date => $jourTab) {
-            $tabNbHoureNav[$date]=array();
+            $tabNbHoureNav[$date]=array(); // date aaa-mm-jj
             $tabSitePrev=array();
             foreach ($jourTab as $houre => $hourTab) {
                 if (sizeof($hourTab)>1) {
@@ -104,6 +117,7 @@ class NbHoureNav {
                             // $data => tab de prevision avec orientation et wind
                             if (!array_key_exists($key,$tabSitePrev)) {
                                 // inexistant dans le tableau des websites de prevision
+                                // => 1er valeur du jour $date
                                 $tabSitePrev[$key]=array();
 
                                 if ($houre > NbHoureNav::HEURE_MATIN) {
@@ -114,6 +128,7 @@ class NbHoureNav {
                                     NbHoureNav::calculateNbHoureWindBetween2Houres($tabSitePrev[$key],$prevHour,$prevOrientation,$prevWind,$houre,$data["orientation"],$data["wind"]);
                                 }
                             } else {
+                                // Passage normal hors la 1er heure de la journée
                                 $prevHour=$tabSitePrev[$key]["prevHoure"];
                                 $prevWind=$tabSitePrev[$key]["prevWind"];
                                 $prevOrientation=$tabSitePrev[$key]["prevOrientation"];
@@ -127,7 +142,16 @@ class NbHoureNav {
                 }
             }
             // $tabSitePrev est remplis des nb Heures de nav en fonction du vent (force et orientation) pour chaque website renseigné
-
+            // $tabSitePrev =
+            //      [WindFinder]
+            //          [8] = 1
+            //          [9] = 0.5
+            //          [10]= 0.5
+            //          [11]= 0
+            //          ...
+            //          [19]= 0
+            //      [MeteoConsult]
+            //      ...
 
             if ($isMarée) {
                 // Il y a des contraintes de marée
@@ -172,42 +196,50 @@ class NbHoureNav {
     }
 
     /**
-     * @param $prevHoure
-     * @param $prevOrientation
-     * @param $prevWind
+     * @param $precHoure : heure précédente
+     * @param $precOrientation: orientation precedente
+     * @param $precWind : vent precedent
      * @param $houre
      * @param $orientation
      * @param $wind
      * remplis le tableau pour toutes les heures entre prevHoure et houre avec le nbHoure de nav en fonction du vent (puissance + orientation)
      */
-    private static function calculateNbHoureWindBetween2Houres(&$tab1SitePrev,$prevHoure,$prevOrientation,$prevWind,$houre,$orientation,$wind) {
-        // Projection sur une ligne droite Y = prevValue + (value-prevValue)/diffHoure * X
+    private static function calculateNbHoureWindBetween2Houres(&$tab1SitePrev,$precHoure,$precOrientation,$precWind,$houre,$orientation,$wind) {
+        // Projection sur une ligne droite Y = precValue + (value-precValue)/diffHoure * X
         // y : value pour x
-        // x : l'heure - $prevHoure
+        // x : l'heure - $precHoure
 
-        $valuePrevOrientation = $prevOrientation=="OK"?1:($prevOrientation=="KO"?0:0.5);
+        $valuePrecOrientation = $precOrientation=="OK"?1:($precOrientation=="KO"?0:0.5);
         $valueOrientation = $orientation=="OK"?1:($orientation=="KO"?0:0.5);
 
-        $diffHoure=$houre-$prevHoure;
-        $diffOrientation=$valueOrientation-$valuePrevOrientation;
-        $diffWind=$wind-$prevWind;
-        for ($numHour=0;$numHour<=($houre-$prevHoure);$numHour++) {
-            $coefOrientation=$valuePrevOrientation+$numHour*$diffOrientation/$diffHoure;
-            $coefWind=$prevWind+$numHour*$diffWind/$diffHoure;
+        $diffHoure=$houre-$precHoure;
+        $diffOrientation=$valueOrientation-$valuePrecOrientation;
+        $diffWind=$wind-$precWind;
+        for ($numHour=0;$numHour<=($houre-$precHoure);$numHour++) { // pour chaque heure entre precHoure et houre
+            //Calcul le coef orientation (0 à 1) et lle vent à l'heure: $precHoure + $numHoure
+            $coefOrientation=$valuePrecOrientation+$numHour*$diffOrientation/$diffHoure;
+            $windAtH=$precWind+$numHour*$diffWind/$diffHoure;
 
-            if ($coefWind<=WebsiteGetData::windPowerMin) {
-                $tab1SitePrev[$prevHoure+$numHour]=0;
-            } elseif ($coefWind<=WebsiteGetData::windPowerMinFun) {
+            if ($windAtH<=WebsiteGetData::windPowerMin) {
+                // pas assez de vent
+                $tab1SitePrev[$precHoure+$numHour]=0;
+            } elseif ($windAtH<=WebsiteGetData::windPowerMinFun) {
+                // juste assez de vent mais pas fun => check l'orientation
                 if ($coefOrientation<0.75) {
-                    $tab1SitePrev[$prevHoure+$numHour]=0;
+                    // si orientation bof + vent limite => ~0 de temps de nav durant l'heure
+                    $tab1SitePrev[$precHoure+$numHour]=0;
                 } else {
-                    $tab1SitePrev[$prevHoure+$numHour]=0.5;
+                    // si bonne orientation + vent limite => ~50% de temps de nav durant l'heure
+                    $tab1SitePrev[$precHoure+$numHour]=0.5;
                 }
             } else {
+                // assez de vent pour s'éclater
                 if ($coefOrientation<0.5) {
-                    $tab1SitePrev[$prevHoure+$numHour]=0.5;
+                    // mauvaise orientation du vent, mais mais ca souffle => ~50% de temps de nav durant l'heure
+                    $tab1SitePrev[$precHoure+$numHour]=0.5;
                 } else {
-                    $tab1SitePrev[$prevHoure+$numHour]=1;
+                    // Orientation pas trop mal + pas mal de vent => 100% de temps de nav durant l'heure
+                    $tab1SitePrev[$precHoure+$numHour]=1;
                 }
             }
         }
