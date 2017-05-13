@@ -115,6 +115,10 @@
                         <li class="{% if app.request.attributes.get('_route') starts with '_commande_import' %} active{% endif %}">
                             <a href="{{ path('_commande_import') }}">Commande : Import</a>
                         </li>
+
+                        <li class="{% if app.request.attributes.get('_route') starts with '_commande_calcul_nb_houre_nav' %} active{% endif %}">
+                            <a href="{{ path('_commande_calcul_nb_houre_nav') }}">Commande : Calcul Nb Hour nav</a>
+                        </li>
                     </ul>
                 </li>
 
