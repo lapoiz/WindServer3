@@ -111,12 +111,21 @@ class ImportCommand extends ContainerAwareCommand  {
             $output->writeln('<comment>Spot : ' . $row['Nom'] . ' </comment>');
             $spot = new Spot();
             $spot->setNom($row['Nom']);
-            $spot->setDescription(ImportCommand::cleanDescription($row['Description']));
-            $spot->setLocalisationDescription(ImportCommand::cleanDescription($row['Localisation']));
+            if (!empty($row['Description'])) {
+                $spot->setDescription(ImportCommand::cleanDescription($row['Description']));
+            }
+            if (!empty($row['Localisation'])) {
+                $spot->setLocalisationDescription(ImportCommand::cleanDescription($row['Localisation']));
+            }
+            if (!empty($row['MareeDesc']) and trim($row['MareeDesc']) != '') {
+                $spot->setInfoMaree(ImportCommand::cleanDescription($row['MareeDesc']));
+            }
+            if (!empty($row['OrientationDesc']) and trim($row['OrientationDesc']) != '') {
+                $spot->setInfoOrientation(ImportCommand::cleanDescription($row['OrientationDesc']));
+            }
             $spot->setGpsLong($row['Long']);
             $spot->setGpsLat($row['Lat']);
             $spot->setIsValide(true);
-
 
             $webSiteWG = $tabWebsites[WebsiteGetData::windguruName];
             //$webSiteWGPro=$tabWebsites['webSiteWGPro'];
@@ -288,9 +297,23 @@ class ImportCommand extends ContainerAwareCommand  {
     static function cleanDescription($desc)
     {
         // Enléve les <br /> pour mettre à la ligne
+        $desc = str_replace('<br/>', '\u239D', $desc);
         $desc = str_replace('<br />', '\u240D', $desc);
+        $desc = str_replace('<b>', '\u241D', $desc);
+        $desc = str_replace('</b>', '\u242D', $desc);
+        $desc = str_replace('<ul>', '\u243D', $desc);
+        $desc = str_replace('</ul>', '\u244D', $desc);
+        $desc = str_replace('<li>', '\u245D', $desc);
+        $desc = str_replace('</li>', '\u246D', $desc);
         $desc=htmlentities($desc);
+        $desc = str_replace('\u239D', '<br />' , $desc);
         $desc = str_replace('\u240D', '<br />' , $desc);
+        $desc = str_replace('\u241D', '<b>',  $desc);
+        $desc = str_replace('\u242D', '</b>', $desc);
+        $desc = str_replace('\u243D', '<ul>', $desc);
+        $desc = str_replace('\u244D', '</ul>', $desc);
+        $desc = str_replace('\u245D', '<li>', $desc);
+        $desc = str_replace('\u246D', '</li>', $desc);
         return $desc;
     }
 
