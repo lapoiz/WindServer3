@@ -51,7 +51,7 @@ class GetDataCommand extends ContainerAwareCommand  {
             try {
                 GetDataCommand::getDataFromDataWindPrev($dataWindPrev, $importanteOutput, $infoOutput, $em);
             } catch (\Exception $e) {
-                $output->writeln('<error>'.$e->getMessage().'</error>');
+                $importanteOutput->writeln('<error>'.$e->getMessage().'</error>');
             }
     	}
 
