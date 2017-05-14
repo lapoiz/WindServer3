@@ -11,6 +11,7 @@ use LaPoiz\WindBundle\core\note\NoteMaree;
 use LaPoiz\WindBundle\core\note\ManageNote;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -32,6 +33,7 @@ class BOAjaxMareeController extends Controller
     public function getMareePrevAction($id=null)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
+        $output = new BufferedOutput();
 
         if (isset($id) && $id!=-1)
         {
@@ -43,7 +45,8 @@ class BOAjaxMareeController extends Controller
                     array('errMessage' => "No spot find !"));
             }
             //$prevMaree=MareeGetData::getMaree($spot->getMareeURL());
-            $prevMaree=MareeGetData::getMareeForXDays($spot->getMareeURL(),10,new NullOutput());
+            $prevMaree=MareeGetData::getMareeForXDays($spot->getMareeURL(),10,$output, $output);
+            $message = $output->fetch();
 
             return $this->render('LaPoizWindBundle:BackOffice/Spot/Ajax/Maree:prevMaree.html.twig', array(
                     'prevMaree' => $prevMaree,
@@ -174,6 +177,7 @@ class BOAjaxMareeController extends Controller
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $spot = $em->find('LaPoizWindBundle:Spot', $id);
+        $output = new BufferedOutput();
 
         if (!$spot)
         {
@@ -185,16 +189,17 @@ class BOAjaxMareeController extends Controller
         $mareeURL = $spot->getMareeURL();
         if (!empty($mareeURL)) {
             $prevMaree = MareeGetData::getMaree($mareeURL);
-            MareeGetData::saveMaree($spot,$prevMaree,$em,new NullOutput());
+            MareeGetData::saveMaree($spot,$prevMaree,$em,$output,$output);
         }
 
         $mareeDateDB = $em->getRepository('LaPoizWindBundle:MareeDate')->findLastPrev(10, $spot);
+        $message = $output->fetch();
 
         return $this->container->get('templating')->renderResponse('LaPoizWindBundle:BackOffice/Spot/Ajax/Maree:mareeSaveResult.html.twig',
             array(
                 'mareeDateDB' => $mareeDateDB,
                 'spot' => $spot,
-                'message' => "",
+                'message' => $message,
                 'saveSuccess' => true
             ));
     }
@@ -208,6 +213,7 @@ class BOAjaxMareeController extends Controller
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
         $spot = $em->find('LaPoizWindBundle:Spot', $id);
+        $output = new BufferedOutput();
 
         if (!$spot)
         {
@@ -218,16 +224,17 @@ class BOAjaxMareeController extends Controller
 
         $mareeURL = $spot->getMareeURL();
         if (!empty($mareeURL)) {
-            MareeGetData::deleteMaree($spot,$em,new NullOutput());
+            MareeGetData::deleteMaree($spot,$em,new $output,$output);
         }
 
         $mareeDateDB = $em->getRepository('LaPoizWindBundle:MareeDate')->findLastPrev(10, $spot);
+        $message = $output->fetch();
 
         return $this->container->get('templating')->renderResponse('LaPoizWindBundle:BackOffice/Spot/Ajax/Maree:mareeSaveResult.html.twig',
             array(
                 'mareeDateDB' => $mareeDateDB,
                 'spot' => $spot,
-                'message' => "",
+                'message' => $message,
                 'saveSuccess' => true
             ));
     }

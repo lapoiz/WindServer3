@@ -2,9 +2,12 @@
 
 namespace LaPoiz\WindBundle\core\maree;
 
+use Doctrine\ORM\EntityManager;
 use Goutte\Client;
 use LaPoiz\WindBundle\Entity\MareeDate;
 use LaPoiz\WindBundle\Entity\PrevisionMaree;
+use LaPoiz\WindBundle\Entity\Spot;
+use Symfony\Component\Console\Output\OutputInterface;
 
 
 class MareeGetData {
@@ -31,7 +34,7 @@ class MareeGetData {
      * @param $nbDays: number of prevision days since today
      * @return an array of prevision
      */
-    static function getMareeForXDays($mareeInfoURL, $nbDays, $output) {
+    static function getMareeForXDays($mareeInfoURL, $nbDays, OutputInterface $importanteOutput, OutputInterface $infoOutput) {
 
         $prevMaree = array();
         $day = new \DateTime("now");
@@ -40,7 +43,7 @@ class MareeGetData {
             // $url=$mareeInfoURL?d=$idDateURLInfoMaree
             //$idDateURLInfoMaree = 20150106
             $url=$mareeInfoURL.'?d='.$day->format('Ymd');
-            $output->writeln('<info>url : '.$url.'</info>');
+            $infoOutput->writeln('<info>url : '.$url.'</info>');
             $prevMaree[$numJour]=MareeGetData::getHauteurMareeFromURL($url);
             $day->add(new \DateInterval('P01D')); // ajout d'un jour
         }
@@ -48,14 +51,14 @@ class MareeGetData {
         return $prevMaree;
     }
 
-    static function saveMaree($spot, $prevMaree, $entityManager, $output) {
-        $output->writeln('<info>****** function saveMaree ****</info>');
+    static function saveMaree($spot, $prevMaree, EntityManager $entityManager, OutputInterface $importanteOutput, OutputInterface $infoOutput) {
+        $infoOutput->writeln('<info>****** function saveMaree ****</info>');
         $today = new \DateTime("now");
         $currentDay=$today;
         $regExGetHoure = '#h#';
         $regExGetHauteur = '#m#';
 
-        MareeGetData::deleteOldMaree($spot,$entityManager,$output);
+        MareeGetData::deleteOldMaree($spot,$entityManager,$importanteOutput, $infoOutput);
 
         $lastMareeDate = $entityManager->getRepository('LaPoizWindBundle:MareeDate')->findLast($spot);
         $beginDate = null;
@@ -77,8 +80,8 @@ class MareeGetData {
                     $previsionMaree->setHauteur(floatval($hauteurPrev));
                     $hour=new \DateTime();
                     //$hour->modify("+".$numDay." days");
-                    $output->writeln('$heure: '.$heure);
-                    $output->writeln('$hauteurPrev: '.$hauteurPrev);
+                    $infoOutput->writeln('$heure: '.$heure);
+                    $infoOutput->writeln('$hauteurPrev: '.$hauteurPrev);
                     // $heure = 17h40
                     //list($hourPrev,$minPrev) = preg_split( $regExGetHoure, $heure);
                     list($hourPrev,$minPrev) = preg_split( $regExGetHoure, $heure);
@@ -90,10 +93,10 @@ class MareeGetData {
                     $entityManager->persist($previsionMaree);
                     $entityManager->flush();
                 }
-                $output->writeln('$mareeDate->getDatePrev 1: '.$mareeDate->getDatePrev()->format('Y-m-d H:i:s'));
+                $infoOutput->writeln('$mareeDate->getDatePrev 1: '.$mareeDate->getDatePrev()->format('Y-m-d H:i:s'));
                 $entityManager->persist($mareeDate);
                 $entityManager->flush();
-                $output->writeln('$mareeDate->getDatePrev 2: '.$mareeDate->getDatePrev()->format('Y-m-d H:i:s'));
+                $infoOutput->writeln('$mareeDate->getDatePrev 2: '.$mareeDate->getDatePrev()->format('Y-m-d H:i:s'));
             } // end of if $currentDay>$beginDate
 
             $currentDay= date_add($currentDay, new \DateInterval('P1D'));
@@ -104,15 +107,15 @@ class MareeGetData {
     /**
      * Attention - Efface toutes les marées de la BD
      */
-    static function deleteMaree($spot, $entityManager, $output) {
-        $output->writeln('<info>****** function deleteMaree ****</info>');
+    static function deleteMaree(Spot $spot, EntityManager $entityManager, OutputInterface $importanteOutput, OutputInterface $infoOutput) {
+        $infoOutput->writeln('<info>****** function deleteMaree ****</info>');
 
         foreach ($spot->getListMareeDate() as $mareeDate) {
-                $output->writeln('<info>delete $mareeDate->getDatePrev : '.$mareeDate->getDatePrev()->format('Y-m-d H:i:s').'</info>');
+            $infoOutput->writeln('<info>delete $mareeDate->getDatePrev : '.$mareeDate->getDatePrev()->format('Y-m-d H:i:s').'</info>');
                 try {
                     $entityManager->remove($mareeDate);
                 } catch (\Exception $ex) {
-                    $output->writeln("Exception Found - " . $ex->getMessage());;
+                    $importanteOutput->writeln("Exception Found - " . $ex->getMessage());;
                 }
         }
         $entityManager->flush();
@@ -121,8 +124,8 @@ class MareeGetData {
     /**
      * Efface les marées anciennes (antérieur à aujourd'hui)
      */
-    static function deleteOldMaree($spot, $entityManager, $output) {
-        $output->writeln('<info>****** function deleteOldMaree ****</info>');
+    static function deleteOldMaree($spot, EntityManager $entityManager, OutputInterface $importanteOutput, OutputInterface $infoOutput) {
+        $infoOutput->writeln('<info>****** function deleteOldMaree ****</info>');
         $today=new \DateTime('now');
         $today->setTime(0, 0, 0);
 
@@ -131,10 +134,10 @@ class MareeGetData {
                 // avant today -> on efface
                 try {
                     $entityManager->remove($mareeDate);
-                    $output->writeln('<info>delete $mareeDate->getDatePrev : '.$mareeDate->getDatePrev()->format('Y-m-d H:i:s').'</info>');
+                    $infoOutput->writeln('<info>delete $mareeDate->getDatePrev : '.$mareeDate->getDatePrev()->format('Y-m-d H:i:s').'</info>');
 
                 } catch (\Exception $ex) {
-                    $output->writeln("Exception Found - " . $ex->getMessage());;
+                    $importanteOutput->writeln("Exception Found - " . $ex->getMessage());;
                 }
             }
         }

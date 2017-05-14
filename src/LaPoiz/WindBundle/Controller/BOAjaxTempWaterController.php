@@ -5,6 +5,7 @@ use LaPoiz\WindBundle\Form\TempWaterType;
 use LaPoiz\WindBundle\core\tempWater\TempWaterGetData;
 
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\SecurityContext;
@@ -126,17 +127,20 @@ class BOAjaxTempWaterController extends Controller
 
         $tempWaterURL = $spot->getTempWaterURL();
         if (!empty($tempWaterURL)) {
-            $prevTempWater = TempWaterGetData::getTempWater($tempWaterURL, new NullOutput());
-            TempWaterGetData::saveTempWater($spot,$prevTempWater,$em,new NullOutput());
+            $output = new BufferedOutput();
+            $prevTempWater = TempWaterGetData::getTempWater($tempWaterURL, $output, $output);
+            TempWaterGetData::saveTempWater($spot,$prevTempWater,$em, $output, $output);
         }
 
         $previsionTempWaterList = $em->getRepository('LaPoizWindBundle:PrevisionTempWater')->getFuturePrevisionTempWater($spot);
+
+        $message = $output->fetch();
 
         return $this->container->get('templating')->renderResponse('LaPoizWindBundle:BackOffice/Spot/Ajax/TempWater:tempWaterSaveResult.html.twig',
             array(
                 'previsionTempWaterList' => $previsionTempWaterList,
                 'spot' => $spot,
-                'message' => "",
+                'message' => $message,
                 'saveSuccess' => true
             ));
     }
@@ -146,6 +150,7 @@ class BOAjaxTempWaterController extends Controller
      * Efface les prévisions de T°C de l'eau
      * http://localhost/Wind/web/app_dev.php/admin/BO/ajax/spot/tempwater/delete/1
      */
+    /*
     public function tempWaterDeleteAction($id)
     {
         $em = $this->container->get('doctrine.orm.entity_manager');
@@ -173,7 +178,7 @@ class BOAjaxTempWaterController extends Controller
                 'saveSuccess' => true
             ));
     }
-
+*/
     /**
      * @Template()
      *

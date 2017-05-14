@@ -30,7 +30,7 @@ class DeleteMareeCommand extends ContainerAwareCommand  {
         $output->writeln('<info>************** DELETE MAREE ****************</info>');
         foreach ($spotList as $spot) {
             if ($spot->getMareeURL()!=null) {
-                MareeGetData::deleteMaree($spot,$em, $output);
+                MareeGetData::deleteMaree($spot,$em, $output, $output);
             }
         }
     }

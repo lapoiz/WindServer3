@@ -2,17 +2,20 @@
 
 namespace LaPoiz\WindBundle\core\tempWater;
 
+use Doctrine\ORM\EntityManager;
 use Goutte\Client;
 use LaPoiz\WindBundle\Entity\NotesDate;
 use LaPoiz\WindBundle\Entity\PrevisionDate;
 use LaPoiz\WindBundle\Entity\PrevisionTempWater;
+use LaPoiz\WindBundle\Entity\Spot;
+use Symfony\Component\Console\Output\OutputInterface;
 
 
 class TempWaterGetData {
 
-    static function getTempWaterFromSpot($spot, $output) {
+    static function getTempWaterFromSpot($spot, OutputInterface $importanteOutput, OutputInterface $infoOutput) {
         if ($spot->getTempWaterURL() != null) {
-            return TempWaterGetData::getTempWater($spot->getTempWaterURL(), $output);
+            return TempWaterGetData::getTempWater($spot->getTempWaterURL(),  $importanteOutput,  $infoOutput);
         } else {
             return null;
         }
@@ -22,7 +25,7 @@ class TempWaterGetData {
      * Récupere les prévision de T°C de l'eau depuis www.meteocity.com sur les 7 prochains joursS
      * Utiliser: http://marine.meteoconsult.fr/meteo-marine/meteo-spots-de-glisse/manche/previsions-meteo-bleriot-plage-390-3.php
      */
-    static function getTempWater($tempWaterInfoURL, $output) {
+    static function getTempWater($tempWaterInfoURL, OutputInterface $importanteOutput, OutputInterface $infoOutput) {
         // $tempWaterInfoURL: http://www.meteocity.com/france/plage/dieppe_p76217/
         // ajax pour avoir les infos: http://www.meteocity.com/ajax/Beach/ajaxChangeBeachView/?date=20151203+&citId=76217&modificateur=1
 
@@ -43,7 +46,7 @@ class TempWaterGetData {
         for ($numJour = 0; $numJour <= 5; $numJour++) {
             $ajaxUrl=str_replace("__date__",$day->format('Ymd'),$ajaxUrlType);
             $day->add($inter1Day); // ajout d'un jour
-            $output->writeln('<info>url : '.$ajaxUrl.'</info>');
+            $infoOutput->writeln('<info>url : '.$ajaxUrl.'</info>');
 
             $crawler = $client->request('GET', $ajaxUrl);
             /*
@@ -58,7 +61,7 @@ class TempWaterGetData {
             preg_match($regExGetTempWater,$divTempsWater->text(),$tempWater);
 
             $prevTempWater[$numJour]=$tempWater[1];
-            $output->writeln('<info>temperature de l eau pour le '.$day->format('d/m/Y').': '.$tempWater[1].'</info>');
+            $infoOutput->writeln('<info>temperature de l eau pour le '.$day->format('d/m/Y').': '.$tempWater[1].'</info>');
         }
 
         return $prevTempWater;
@@ -79,8 +82,8 @@ class TempWaterGetData {
      *  Aujourd'hui: 12°C, demain : 13°C ...
      *
      */
-    static function saveTempWater($spot, $prevTempWaterTab, $entityManager, $output) {
-        $output->writeln('<info>****** function saveTempWater ****</info>');
+    static function saveTempWater(Spot $spot, $prevTempWaterTab, EntityManager $entityManager, OutputInterface $importanteOutput, OutputInterface $infoOutput) {
+        $infoOutput->writeln('<info>****** function saveTempWater ****</info>');
 
         //TempWaterGetData::deleteOldTempWater($spot,$entityManager,$output); -> on n'efface pas les ancienne valeur
         $futureNotesDate= $entityManager->getRepository('LaPoizWindBundle:NotesDate')->getFutureNotesDate($spot);
@@ -102,7 +105,7 @@ class TempWaterGetData {
                 $entityManager->persist($previsionNotesDate);
                 $entityManager->persist($spot);
             }
-            $output->writeln('save tempWater:'.$previsionNotesDate->getTempWater().'°C for '.$previsionNotesDate->getDatePrev()->format('d/m/Y'));
+            $infoOutput->writeln('save tempWater:'.$previsionNotesDate->getTempWater().'°C for '.$previsionNotesDate->getDatePrev()->format('d/m/Y'));
             $currentDay= date_add($currentDay, new \DateInterval('P1D'));
         };
         $entityManager->flush();

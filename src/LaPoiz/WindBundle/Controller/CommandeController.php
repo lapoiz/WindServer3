@@ -89,7 +89,7 @@ class CommandeController extends Controller
         $output = new BufferedOutput();
 
         // Commande Calcul nb houre de nav
-        CreateNbHoureCommand::calcul($input, $output, $em);
+        CreateNbHoureCommand::calcul($input, $output, $output, $em);
 
         // return the output, don't use if you used NullOutput()
         $message = $output->fetch();
