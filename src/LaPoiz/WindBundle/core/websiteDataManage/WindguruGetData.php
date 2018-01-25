@@ -16,8 +16,17 @@ class WindguruGetData extends WebsiteGetData
 	function getDataURL($url) 
 	{ 
 	    $tableauData = array();
-		$file = fopen($url,"r");		
-		
+		$file = fopen($url,"r");
+
+		// Save file
+        /*$fp = fopen('windGuru_HTML.html', 'w'); // save on web directory
+        while ($brut = fread($file,8192)){
+            // on les ecrits dans le fichier de sortie
+            fwrite($fp, $brut, 8192);
+        }
+        fclose($fp);
+        */
+
 		while (!feof($file)) 
 		{ // line per line			
   			$line = fgets($file); // read a line

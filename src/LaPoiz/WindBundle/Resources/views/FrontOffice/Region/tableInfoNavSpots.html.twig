@@ -16,7 +16,7 @@
             <tr>
                 <th scope="row" class="titleLineTableNote">
                     <a href="{{ path('_fo_spot_graph',{'id':spot.id}) }}">
-                        {{ spot.nom }} <br />
+                        {{ spot.nom }} <span class="titleLineTableNoteNbMin">({{ (spot.nbMinuteFromParis / 60) | round }}h{{ spot.nbMinuteFromParis % 60 }})</span><br />
                         <i class="icon-chart-bar" ></i>
                     </a>
                 </th>

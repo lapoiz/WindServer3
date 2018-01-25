@@ -19,6 +19,12 @@ class MeteoFranceGetData extends WebsiteGetData
 	 */
 	function analyseData($pageHTML,$url) {
 
+
+            $fp = fopen('meteoFrance_HTML.html', 'w'); // save on web directory
+            fwrite($fp, $pageHTML->html());
+            fclose($fp);
+
+
 		$previsionTab=array();
 		if (empty($pageHTML)) {
 			return null;

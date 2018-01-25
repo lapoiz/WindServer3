@@ -163,6 +163,31 @@ class Spot
     private $infoSpot;
 
     /**
+     * @ORM\Column(type="decimal",nullable=true,scale=2)
+     * nb de km depuis Paris (porte d'Auteuil)
+     */
+    private $nbKmFromParis;
+
+    /**
+     * @ORM\Column(type="decimal",nullable=true,scale=2)
+     * nb de km depuis Paris (porte d'Auteuil) en autoroute
+     */
+    private $nbKmFromParisAutoroute;
+
+    /**
+     * @ORM\Column(type="decimal",nullable=true,scale=2)
+     * Prix en payage depuis Paris
+     */
+    private $payageFromParis;
+
+    /**
+     * @ORM\Column(type="integer",nullable=true)
+     * Temps théorique pour y aller depuis Paris (Porte d'Auteuil)
+     */
+    private $nbMinuteFromParis;
+
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -946,5 +971,101 @@ class Spot
     public function getInfoMaree()
     {
         return $this->infoMaree;
+    }
+
+    /**
+     * Set nbKmFromParis
+     *
+     * @param string $nbKmFromParis
+     *
+     * @return Spot
+     */
+    public function setNbKmFromParis($nbKmFromParis)
+    {
+        $this->nbKmFromParis = $nbKmFromParis;
+
+        return $this;
+    }
+
+    /**
+     * Get nbKmFromParis
+     *
+     * @return string
+     */
+    public function getNbKmFromParis()
+    {
+        return $this->nbKmFromParis;
+    }
+
+    /**
+     * Set nbKmFromParisAutoroute
+     *
+     * @param string $nbKmFromParisAutoroute
+     *
+     * @return Spot
+     */
+    public function setNbKmFromParisAutoroute($nbKmFromParisAutoroute)
+    {
+        $this->nbKmFromParisAutoroute = $nbKmFromParisAutoroute;
+
+        return $this;
+    }
+
+    /**
+     * Get nbKmFromParisAutoroute
+     *
+     * @return string
+     */
+    public function getNbKmFromParisAutoroute()
+    {
+        return $this->nbKmFromParisAutoroute;
+    }
+
+    /**
+     * Set payageFromParis
+     *
+     * @param string $payageFromParis
+     *
+     * @return Spot
+     */
+    public function setPayageFromParis($payageFromParis)
+    {
+        $this->payageFromParis = $payageFromParis;
+
+        return $this;
+    }
+
+    /**
+     * Get payageFromParis
+     *
+     * @return string
+     */
+    public function getPayageFromParis()
+    {
+        return $this->payageFromParis;
+    }
+
+    /**
+     * Set nbMinuteFromParis
+     *
+     * @param integer $nbMinuteFromParis
+     *
+     * @return Spot
+     */
+    public function setNbMinuteFromParis($nbMinuteFromParis)
+    {
+        $this->nbMinuteFromParis = $nbMinuteFromParis;
+
+        return $this;
+    }
+
+    /**
+     * Get nbMinuteFromParis
+     *
+     * @return integer
+     */
+    public function getNbMinuteFromParis()
+    {
+        return $this->nbMinuteFromParis;
     }
 }

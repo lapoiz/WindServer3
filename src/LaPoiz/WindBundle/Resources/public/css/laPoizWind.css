@@ -11,6 +11,10 @@
 .titleLineTableNote {
     vertical-align: middle;
 }
+ .titleLineTableNoteNbMin {
+     font-size: 9px;
+     font-style: italic;
+ }
 
 
 .table-note {

@@ -20,7 +20,7 @@
 
 {% block bodyPage %}
 
-<h1>Prévisions météo et détails du spot: {{ spot.nom }}</h1>
+<h1>Prévisions météo et détails du spot: {{ spot.nom }} </h1>
 
     <div class="row">
         <div class="col-sm-12">
@@ -123,6 +123,12 @@
 
         <div class="col-sm-6">
             <h3>Localisation de {{ spot.nom }}</h3>
+                <h4>Depuis Paris (Porte d'Auteuil)</h4>
+                    <ul>
+                        <li>Trajet de {{ (spot.nbMinuteFromParis / 60) | round }}h{{ spot.nbMinuteFromParis % 60 }} depuis Paris (calculé sans embouteillage).</li>
+                        <li>{{ spot.nbKmFromParis | round}}km  de route dont {{ spot.nbKmFromParisAutoroute | round}}km d'autoroute (payage: {{ spot.payageFromParis }}€) </li>
+                    </ul>
+                <h4>Pour y aller</h4>
 
             {% from "LaPoizWindBundle:FrontOffice/spot:localisation.html.twig" import detail %}
             {{ detail(spot) }}

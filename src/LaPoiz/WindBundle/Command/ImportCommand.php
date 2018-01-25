@@ -127,6 +127,19 @@ class ImportCommand extends ContainerAwareCommand  {
             $spot->setGpsLat($row['Lat']);
             $spot->setIsValide(true);
 
+            if (!empty($row['DistFromParis']) and trim($row['DistFromParis']) != '') {
+                $spot->setNbKmFromParis($row['DistFromParis']);
+            }
+            if (!empty($row['DistFromParisAutoroute']) and trim($row['DistFromParisAutoroute']) != '') {
+                $spot->setNbKmFromParisAutoroute($row['DistFromParisAutoroute']);
+            }
+            if (!empty($row['TimeFromParis']) and trim($row['TimeFromParis']) != '') {
+                $spot->setNbMinuteFromParis($row['TimeFromParis']);
+            }
+            if (!empty($row['PéageFromParis']) and trim($row['PéageFromParis']) != '') {
+                $spot->setPayageFromParis($row['PéageFromParis']);
+            }
+
             $webSiteWG = $tabWebsites[WebsiteGetData::windguruName];
             //$webSiteWGPro=$tabWebsites['webSiteWGPro'];
             $webSiteWF = $tabWebsites[WebsiteGetData::windFinderName];
